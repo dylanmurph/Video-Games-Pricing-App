@@ -1,11 +1,25 @@
 using GameDealFinder.Components;
+using GameDealFinder.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddHttpClient();
+
+builder.Services.AddHttpClient<IRawgService, RawgService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.rawg.io/api/");
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("GameDealFinder");
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
+
+builder.Services.AddHttpClient<ICheapSharkService, CheapSharkService>(client =>
+{
+    client.BaseAddress = new Uri("https://www.cheapshark.com/api/1.0/");
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("GameDealFinder/0.1");
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 
 var app = builder.Build();
 
