@@ -1,7 +1,51 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Game Deal Finder</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Game Deal Finder</h1>
 
-Welcome to your new app.
+<form class="d-flex gap-2 my-3" @onsubmit="SearchAsync">
+    <input class="form-control" placeholder="Search for a game, e.g. Call of Duty" @bind="query" />
+    <button class="btn btn-primary" type="submit" disabled="@loading">Search</button>
+</form>
+
+@if (errorMessage is not null)
+{
+    <div class="alert alert-warning">@errorMessage</div>
+}
+else if (loading)
+{
+    <p>Searching…</p>
+}
+else if (games is { Count: 0 })
+{
+    <p>No games found.</p>
+}
+else if (games is not null)
+{
+    @if (priceWarning is not null)
+    {
+        <div class="alert alert-info">@priceWarning</div>
+    }
+
+    <ul class="list-group">
+        @foreach (var game in games)
+        {
+            <li class="list-group-item d-flex align-items-center gap-3">
+                <div class="bg-secondary-subtle rounded flex-shrink-0"aria-hidden="true"></div>
+
+                <div class="flex-grow-1">
+                    <div class="fw-semibold">@game.Name</div>
+                    <div class="text-muted small">
+                        @(game.Released?.Year.ToString() ?? "TBA") | @game.Rating.ToString("0.0")
+                    </div>
+                </div>
+
+                <div class="text-end">
+                    <div class="text-muted small">Lowest price</div>
+                    <div class="fs-5 fw-bold">@LowestPriceFor(game)</div>
+                </div>
+            </li>
+        }
+    </ul>
+}
