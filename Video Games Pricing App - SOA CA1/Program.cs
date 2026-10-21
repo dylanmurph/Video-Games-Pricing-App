@@ -1,4 +1,5 @@
 using GameDealFinder.Components;
+using GameDealFinder.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddHttpClient();
+
+builder.Services.AddHttpClient<IRawgService, RawgService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.rawg.io/api/");
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("GameDealFinder");
+    client.Timeout = TimeSpan.FromSeconds(10);
+});
 
 var app = builder.Build();
 
