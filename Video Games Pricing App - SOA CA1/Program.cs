@@ -1,10 +1,11 @@
-using Video_Games_Pricing_App___SOA_CA1.Components;
+using GameDealFinder.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
