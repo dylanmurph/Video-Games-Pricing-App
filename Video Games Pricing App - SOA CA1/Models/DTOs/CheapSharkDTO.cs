@@ -15,4 +15,7 @@ public class CheapSharkGameDto
 
     [JsonPropertyName("thumb")]
     public string? Thumb { get; set; }
+
+    [JsonPropertyName("cheapestDealID")]
+    public string? CheapestDealId { get; set; }
 }
