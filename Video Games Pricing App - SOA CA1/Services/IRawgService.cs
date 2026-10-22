@@ -5,4 +5,5 @@ namespace GameDealFinder.Services;
 public interface IRawgService
 {
     Task<List<Game>> SearchGamesAsync(string query);
+    Task<Game?> GetGameAsync(int id);
 }

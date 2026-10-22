@@ -22,4 +22,11 @@ public static class CheapSharkMapper
         CheapestDealId = dto.DealId ?? string.Empty,
         StoreName = storeName
     };
+
+    public static GameDeal ToGameDeal(CheapSharkStoreDealDto dto, string storeName) => new()
+    {
+        StoreName = storeName,
+        CheapestPrice = dto.Price,
+        CheapestDealId = dto.DealId ?? string.Empty
+    };
 }
