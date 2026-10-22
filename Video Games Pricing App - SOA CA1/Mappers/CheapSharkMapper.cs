@@ -13,4 +13,13 @@ public static class CheapSharkMapper
         ThumbnailUrl = dto.Thumb,
         CheapestDealId = dto.CheapestDealId ?? string.Empty
     };
+    public static GameDeal ToGameDeal(CheapSharkDealDto dto, string storeName) => new()
+    {
+        GameId = dto.GameId ?? string.Empty,
+        Title = dto.Title ?? string.Empty,
+        CheapestPrice = dto.SalePrice,
+        ThumbnailUrl = dto.Thumb,
+        CheapestDealId = dto.DealId ?? string.Empty,
+        StoreName = storeName
+    };
 }
