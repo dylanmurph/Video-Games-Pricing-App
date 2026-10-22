@@ -47,4 +47,17 @@ public class RawgService : IRawgService
             throw new ApiException("RAWG took too long to respond.", ex);
         }
     }
+
+    public async Task<Game?> GetGameAsync(int id)
+    {
+        try
+        {
+            var dto = await _http.GetFromJsonAsync<RawgGameDto>($"games/{id}?key={_apiKey}");
+            return dto is null ? null : RawgMapper.ToGame(dto);
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new ApiException("Couldn't get the game from RAWG.", ex);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace GameDealFinder.Models.Dtos;
+
 public class CheapSharkGameDto
 {
     [JsonPropertyName("gameID")]
@@ -49,4 +50,23 @@ public class CheapSharkStoreDto
 
     [JsonPropertyName("storeName")]
     public string? StoreName { get; set; }
+}
+
+public class CheapSharkGameLookupDto
+{
+    [JsonPropertyName("deals")]
+    public List<CheapSharkStoreDealDto>? Deals { get; set; }
+}
+
+public class CheapSharkStoreDealDto
+{
+    [JsonPropertyName("storeID")]
+    public string? StoreId { get; set; }
+
+    [JsonPropertyName("dealID")]
+    public string? DealId { get; set; }
+
+    [JsonPropertyName("price")]
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
+    public decimal Price { get; set; }
 }

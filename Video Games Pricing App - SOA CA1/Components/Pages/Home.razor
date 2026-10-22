@@ -46,7 +46,7 @@ else if (games is not null)
                     }
 
                     <div class="flex-grow-1">
-                        <div class="fw-semibold">@game.Name</div>
+                        <a href="game/@game.Id?deal=@deal.GameId" class="fw-semibold">@game.Name</a>
                         <div class="text-muted small">
                             @(game.Released?.Year.ToString() ?? "TBA") | @game.Rating.ToString("0.0")
                         </div>
