@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using GameDealFinder.Models
 
 <PageTitle>Game Deal Finder</PageTitle>
 
@@ -31,21 +32,24 @@ else if (games is not null)
     <ul class="list-group">
         @foreach (var game in games)
         {
-            <li class="list-group-item d-flex align-items-center gap-3">
-                <div class="bg-secondary-subtle rounded flex-shrink-0"aria-hidden="true"></div>
+            @if (FindDeal(game) is GameDeal deal)
+            {
+                <li class="list-group-item d-flex align-items-center gap-3">
+                    <div class="bg-secondary-subtle rounded flex-shrink-0"aria-hidden="true"></div>
 
-                <div class="flex-grow-1">
-                    <div class="fw-semibold">@game.Name</div>
-                    <div class="text-muted small">
-                        @(game.Released?.Year.ToString() ?? "TBA") | @game.Rating.ToString("0.0")
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold">@game.Name</div>
+                        <div class="text-muted small">
+                            @(game.Released?.Year.ToString() ?? "TBA") | @game.Rating.ToString("0.0")
+                        </div>
                     </div>
-                </div>
 
-                <div class="text-end">
-                    <div class="text-muted small">Lowest price</div>
-                    <div class="fs-5 fw-bold">@LowestPriceFor(game)</div>
-                </div>
-            </li>
+                    <div class="text-end">
+                        <div class="text-muted small">Lowest price</div>
+                        <div class="fs-5 fw-bold">$@deal.CheapestPrice.ToString("0.00")</div>
+                    </div>
+                </li>
+            }
         }
     </ul>
 }

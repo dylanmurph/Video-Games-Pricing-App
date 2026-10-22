@@ -9,7 +9,7 @@ namespace GameDealFinder.Services;
 
 public class CheapSharkService : ICheapSharkService
 {
-    private const int PageSize = 5;
+    private const int PageSize = 150;
 
     private readonly HttpClient _http;
 

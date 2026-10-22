@@ -7,7 +7,7 @@ namespace GameDealFinder.Services;
 
 public class RawgService : IRawgService
 {
-    private const int PageSize = 5;
+    private const int PageSize = 20;
 
     private readonly HttpClient _http;
     private readonly string? _apiKey;
@@ -30,7 +30,8 @@ public class RawgService : IRawgService
             throw new ApiException("RAWG API key is missing. Add RawgApiKey to user secrets.");
         }
 
-        var url = $"games?key={_apiKey}&search={Uri.EscapeDataString(query.Trim())}&page_size={PageSize}";
+        var url = $"games?key={_apiKey}&search={Uri.EscapeDataString(query.Trim())}" +
+          $"&search_precise=true&exclude_additions=true&page_size={PageSize}";
 
         try
         {

@@ -12,7 +12,7 @@ public partial class Home
 
     private string query = string.Empty;
     private List<Game>? games;
-    private Dictionary<string, decimal> lowestPrices = new(StringComparer.OrdinalIgnoreCase);
+    private List<GameDeal> deals = new();
     private bool loading;
     private string? errorMessage;
     private string? priceWarning;
@@ -36,8 +36,10 @@ public partial class Home
 
         try
         {
-            games = await gamesTask;
-            lowestPrices = await GetLowestPricesAsync(dealsTask);
+            games = (await gamesTask)
+            .OrderBy(game => game.Released ?? DateOnly.MaxValue)
+            .ToList();
+            deals = await GetDealsAsync(dealsTask);
         }
         catch (ApiException ex)
         {
@@ -50,26 +52,30 @@ public partial class Home
         }
     }
 
-    private async Task<Dictionary<string, decimal>> GetLowestPricesAsync(Task<List<GameDeal>> dealsTask)
+    private async Task<List<GameDeal>> GetDealsAsync(Task<List<GameDeal>> dealsTask)
     {
         try
         {
-            var deals = await dealsTask;
-
-            return deals
-                .GroupBy(deal => deal.Title, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(
-                    group => group.Key,
-                    group => group.Min(deal => deal.CheapestPrice),
-                    StringComparer.OrdinalIgnoreCase);
+            return await dealsTask;
         }
         catch (ApiException ex)
         {
             priceWarning = $"Prices are unavailable right now. {ex.Message}";
-            return new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
+            return new List<GameDeal>();
         }
     }
 
-    private string LowestPriceFor(Game game) =>
-        lowestPrices.TryGetValue(game.Name, out var price) ? $"${price:0.00}" : "Not found";
+    private GameDeal? FindDeal(Game game)
+    {
+        var name = Clean(game.Name);
+
+        return deals
+            .Where(deal => Clean(deal.Title).StartsWith(name))
+            .OrderBy(deal => deal.Title.Length)
+            .ThenBy(deal => deal.CheapestPrice)
+            .FirstOrDefault();
+    }
+
+    private static string Clean(string text) =>
+        new string(text.ToLowerInvariant().Where(char.IsLetterOrDigit).ToArray());
 }

@@ -10,6 +10,7 @@ public static class CheapSharkMapper
         GameId = dto.GameId ?? string.Empty,
         Title = dto.Title ?? string.Empty,
         CheapestPrice = dto.Cheapest,
-        ThumbnailUrl = dto.Thumb
+        ThumbnailUrl = dto.Thumb,
+        CheapestDealId = dto.CheapestDealId ?? string.Empty
     };
 }
