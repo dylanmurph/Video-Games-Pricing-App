@@ -25,12 +25,25 @@ public class CheapSharkService : ICheapSharkService
             return new List<GameDeal>();
         }
 
-        var url = $"games?title={Uri.EscapeDataString(title.Trim())}&limit={PageSize}";
+        var url = $"deals?title={Uri.EscapeDataString(title.Trim())}&pageSize={PageSize}";
 
         try
         {
-            var response = await _http.GetFromJsonAsync<List<CheapSharkGameDto>>(url);
-            return response?.Select(CheapSharkMapper.ToGameDeal).ToList() ?? new List<GameDeal>();
+            var dealsTask = _http.GetFromJsonAsync<List<CheapSharkDealDto>>(url);
+            var storesTask = _http.GetFromJsonAsync<List<CheapSharkStoreDto>>("stores");
+
+            var deals = await dealsTask ?? new List<CheapSharkDealDto>();
+            var stores = await storesTask ?? new List<CheapSharkStoreDto>();
+
+            var storeNames = stores
+                .Where(store => store.StoreId is not null && store.StoreName is not null)
+                .ToDictionary(store => store.StoreId!, store => store.StoreName!);
+
+            return deals
+                .Select(deal => CheapSharkMapper.ToGameDeal(
+                    deal,
+                    storeNames.GetValueOrDefault(deal.StoreId ?? string.Empty, "Unknown store")))
+                .ToList();
         }
         catch (HttpRequestException ex)
         {

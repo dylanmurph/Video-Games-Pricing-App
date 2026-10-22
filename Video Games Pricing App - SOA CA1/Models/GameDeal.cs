@@ -8,4 +8,5 @@ public class GameDeal
     public string? ThumbnailUrl { get; set; }
     public string CheapestDealId { get; set; } = string.Empty;
     public string DealUrl => $"https://www.cheapshark.com/redirect?dealID={CheapestDealId}";
+    public string StoreName { get; set; } = string.Empty;
 }
