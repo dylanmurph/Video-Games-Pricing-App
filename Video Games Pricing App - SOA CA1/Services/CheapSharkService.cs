@@ -54,4 +54,26 @@ public class CheapSharkService : ICheapSharkService
             throw new ApiException("CheapShark took too long to respond.", ex);
         }
     }
+
+    public async Task<List<GameDeal>> GetStorePricesAsync(string gameId)
+    {
+        try
+        {
+            var lookup = await _http.GetFromJsonAsync<CheapSharkGameLookupDto>($"games?id={gameId}");
+            var stores = await _http.GetFromJsonAsync<List<CheapSharkStoreDto>>("stores") ?? new();
+
+            var storeNames = stores
+                .Where(s => s.StoreId is not null && s.StoreName is not null)
+                .ToDictionary(s => s.StoreId!, s => s.StoreName!);
+
+            return (lookup?.Deals ?? new())
+                .Select(d => CheapSharkMapper.ToGameDeal(d, storeNames.GetValueOrDefault(d.StoreId ?? "", "Unknown store")))
+                .OrderBy(d => d.CheapestPrice)
+                .ToList();
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new ApiException("Couldn't get store prices from CheapShark.", ex);
+        }
+    }
 }

@@ -11,6 +11,8 @@ public static class RawgMapper
         Id = dto.Id,
         Name = dto.Name ?? string.Empty,
         Released = DateOnly.TryParse(dto.Released, CultureInfo.InvariantCulture, out var date) ? date : null,
-        Rating = dto.Rating
+        Rating = dto.Rating,
+        ImageUrl = dto.BackgroundImage,
+        Description = dto.Description
     };
 }

@@ -1,0 +1,40 @@
+﻿@page "/game/{Id:int}"
+
+<a href="">Back</a>
+
+@if (errorMessage is not null)
+{
+    <div class="alert alert-warning mt-3">@errorMessage</div>
+}
+else if (game is null)
+{
+    <p class="mt-3">Loading…</p>
+}
+else
+{
+    @if (game.ImageUrl is not null)
+    {
+        <img src="@game.ImageUrl" alt="" class="img-fluid rounded my-3" />
+    }
+
+    <h1>@game.Name</h1>
+    <p class="text-muted">
+        Released @(game.Released?.Year.ToString() ?? "TBA") | Rating @game.Rating.ToString("0.0")
+    </p>
+
+    @if (!string.IsNullOrWhiteSpace(game.Description))
+    {
+        <p style="white-space: pre-line;">@game.Description</p>
+    }
+
+    <h2 class="h4 mt-4">Stores</h2>
+    <ul class="list-group">
+        @foreach (var store in stores)
+        {
+            <li class="list-group-item d-flex justify-content-between">
+                <a href="@store.DealUrl" target="_blank">@store.StoreName</a>
+                <strong>$@store.CheapestPrice.ToString("0.00")</strong>
+            </li>
+        }
+    </ul>
+}

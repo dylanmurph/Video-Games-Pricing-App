@@ -21,4 +21,10 @@ public class RawgGameDto
 
     [JsonPropertyName("rating")]
     public double Rating { get; set; }
+
+    [JsonPropertyName("background_image")]
+    public string? BackgroundImage { get; set; }
+
+    [JsonPropertyName("description_raw")]
+    public string? Description { get; set; }
 }
